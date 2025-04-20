@@ -24,6 +24,25 @@ struct ContentView: View {
 }
 
 struct ConeView: View {
+    func eternalRotation(model: ModelEntity) {
+        let spinAction = SpinAction(
+            revolutions: 1,
+            localAxis: [0.5, 1, 0],
+            timingFunction: .linear,
+            isAdditive: false
+        )
+
+        if let spinAnimation = try? AnimationResource.makeActionAnimation(
+            for: spinAction,
+            duration: 12.0,
+            bindTarget: .transform,
+            repeatMode: .cumulative
+
+        ) {
+            model.playAnimation(spinAnimation)
+        }
+    }
+
     var body: some View {
         RealityView { content in
             let mesh = MeshResource.generateCone(height: 1, radius: 0.1)
@@ -34,7 +53,7 @@ struct ConeView: View {
             anchorEntity.position = SIMD3<Float>(0, 0, -0.5)
             anchorEntity.addChild(poopEntity)
 
-            poopEntity.move(to: Transform(), relativeTo: anchorEntity)
+            eternalRotation(model: poopEntity)
 
             content.add(anchorEntity)
         }
