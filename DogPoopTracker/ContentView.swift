@@ -74,7 +74,7 @@ struct PoopView: View {
             DragGesture()
                 .onChanged({
                     gesture in
-                    self.dragOffset = Float(gesture.translation.width) * 0.01
+                    self.dragOffset = Float(gesture.translation.width) * 0.003
                 })
         )
         .gesture(TapGesture().onEnded({ _ in
