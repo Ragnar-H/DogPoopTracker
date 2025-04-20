@@ -24,6 +24,10 @@ struct ContentView: View {
 }
 
 struct PoopView: View {
+    @State private var dragOffset: Float = 0
+    @State private var modelEntity: ModelEntity?
+    @State private var scale: Float = 0.7
+
     func eternalRotation(model: ModelEntity) {
         let spinAction = SpinAction(
             revolutions: 1,
@@ -55,11 +59,32 @@ struct PoopView: View {
 
             let pitchTranslate = Transform(rotation: simd_quatf(angle: .pi/8, axis: SIMD3<Float>(1.0, 0.0, 0.0)))
             poopEntity.move(to: pitchTranslate, relativeTo: nil)
+            poopEntity.components.set(InputTargetComponent())
+            poopEntity.generateCollisionShapes(recursive: false)
 
             eternalRotation(model: poopEntity)
 
+            self.modelEntity = poopEntity
+
             content.add(anchorEntity)
+        } update: { content in
+            if let entity = content.entities.first {
+                var position = entity.position
+                position.x = dragOffset
+                entity.position = position
+                entity.transform.scale = [scale, scale, scale]
+            }
         }
+        .gesture(
+            DragGesture()
+                .onChanged({
+                    gesture in
+                    self.dragOffset = Float(gesture.translation.width) * 0.01
+                })
+        )
+        .gesture(TapGesture().onEnded({ _ in
+            scale = self.scale == 1.0 ? 0.5 : 1.0
+        }))
     }
 }
 
