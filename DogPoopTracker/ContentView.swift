@@ -27,7 +27,7 @@ struct PoopView: View {
     func eternalRotation(model: ModelEntity) {
         let spinAction = SpinAction(
             revolutions: 1,
-            localAxis: [0.5, 1, 0],
+            localAxis: [0, 1, 0],
             timingFunction: .linear,
             isAdditive: false
         )
@@ -52,6 +52,9 @@ struct PoopView: View {
             let anchorEntity = AnchorEntity()
             anchorEntity.position = SIMD3<Float>(0, 0, -0.5)
             anchorEntity.addChild(poopEntity)
+
+            let pitchTranslate = Transform(rotation: simd_quatf(angle: .pi/8, axis: SIMD3<Float>(1.0, 0.0, 0.0)))
+            poopEntity.move(to: pitchTranslate, relativeTo: nil)
 
             eternalRotation(model: poopEntity)
 
