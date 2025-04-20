@@ -14,7 +14,7 @@ struct ContentView: View {
             Text("Poop Shape Selector")
                 .font(.title)
                 .padding()
-            ConeView()
+            PoopView()
                 .frame(height: 300)
                 .background(.orange)
 
@@ -23,7 +23,7 @@ struct ContentView: View {
     }
 }
 
-struct ConeView: View {
+struct PoopView: View {
     func eternalRotation(model: ModelEntity) {
         let spinAction = SpinAction(
             revolutions: 1,
@@ -45,7 +45,7 @@ struct ConeView: View {
 
     var body: some View {
         RealityView { content in
-            let mesh = MeshResource.generateCone(height: 1, radius: 0.1)
+            let mesh = MeshResource.generateBox(size: 0.7)
             let material = SimpleMaterial(color: .brown, roughness: 0.7, isMetallic: false)
             let poopEntity = ModelEntity(mesh: mesh, materials: [material])
 
