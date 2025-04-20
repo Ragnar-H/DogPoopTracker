@@ -51,6 +51,8 @@ struct PoopView: View {
             let mesh = MeshResource.generateBox(size: 0.7)
             let material = SimpleMaterial(color: .brown, roughness: 0.7, isMetallic: false)
             let poopEntity = ModelEntity(mesh: mesh, materials: [material])
+            poopEntity.components.set(InputTargetComponent())
+            poopEntity.generateCollisionShapes(recursive: false)
 
             let anchorEntity = AnchorEntity()
             anchorEntity.position = SIMD3<Float>(0, 0, -0.5)
@@ -71,13 +73,13 @@ struct PoopView: View {
             }
         }
         .gesture(
-            DragGesture()
+            DragGesture().targetedToAnyEntity()
                 .onChanged({
                     gesture in
                     self.dragOffset = Float(gesture.translation.width) * 0.003
                 })
         )
-        .gesture(TapGesture().onEnded({ _ in
+        .gesture(TapGesture().targetedToAnyEntity().onEnded({ _ in
             scale = self.scale == 1.0 ? 0.5 : 1.0
         }))
     }
