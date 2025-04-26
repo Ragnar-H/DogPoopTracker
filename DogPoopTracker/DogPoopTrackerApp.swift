@@ -11,7 +11,7 @@ import SwiftUI
 struct DogPoopTrackerApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            CarouselRealityView()
         }
     }
 }
