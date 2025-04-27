@@ -35,12 +35,6 @@ struct CarouselRealityView: View {
 
                     item.model.transform.translation = SIMD3(Float(totalOffset / 300), 0, 0)
                     item.model.transform.scale = SIMD3(repeating: Float(scale))
-
-                    // Gentle rotation if near center
-                    if distanceFromCenter < 50 {
-                        let rotationSpeed: Float = 0.01
-                        item.model.transform.rotation *= simd_quatf(angle: rotationSpeed, axis: SIMD3(0, 1, 0))
-                    }
                 }
             }
             .gesture(
