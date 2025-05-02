@@ -6,16 +6,18 @@
 //
 
 import SwiftUI
+import RealityKit
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        RealityView { content in
+            let box = ModelEntity(mesh: .generateBox(size: 0.4),
+                                  materials: [SimpleMaterial(color: .red, isMetallic: false)])
+
+            box.position = [0, 0, -1]
+            content.add(box)
+        } update: { content in
         }
-        .padding()
     }
 }
 
