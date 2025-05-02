@@ -9,6 +9,8 @@ import SwiftUI
 import RealityKit
 
 struct ContentView: View {
+    @State private var rotation: Float = 0
+
     var body: some View {
         RealityView { content in
             let box = ModelEntity(mesh: .generateBox(size: 0.4),
@@ -22,7 +24,18 @@ struct ContentView: View {
             light.orientation = simd_quatf(angle: -.pi/4, axis: [1,0,0])
             content.add(light)
         } update: { content in
+            content.entities.forEach { entity in
+                if let model = entity as? ModelEntity {
+                    model.transform.rotation = simd_quatf(angle: rotation, axis: [0, 1, 0])
+                }
+            }
         }
+        .gesture(
+            DragGesture()
+                .onChanged { value in
+                    rotation = Float(value.translation.width) * 0.01
+                }
+        )
     }
 }
 
