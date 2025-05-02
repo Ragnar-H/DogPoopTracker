@@ -16,6 +16,11 @@ struct ContentView: View {
 
             box.position = [0, 0, -1]
             content.add(box)
+
+            let light = DirectionalLight()
+            light.light.intensity = 1000
+            light.orientation = simd_quatf(angle: -.pi/4, axis: [1,0,0])
+            content.add(light)
         } update: { content in
         }
     }
