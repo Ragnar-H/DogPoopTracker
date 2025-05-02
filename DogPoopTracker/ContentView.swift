@@ -26,7 +26,11 @@ struct ContentView: View {
         } update: { content in
             content.entities.forEach { entity in
                 if let model = entity as? ModelEntity {
-                    model.transform.rotation = simd_quatf(angle: rotation, axis: [0, 1, 0])
+                    model.move(
+                        to: Transform(rotation:simd_quatf(angle: rotation, axis: [0, 1, 0])),
+                        relativeTo: model.parent,
+                        duration: 0.2, timingFunction: .easeInOut
+                    )
                 }
             }
         }
