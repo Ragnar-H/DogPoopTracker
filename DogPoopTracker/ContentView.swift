@@ -37,6 +37,8 @@ struct ContentView: View {
         .gesture(
             DragGesture()
                 .onChanged { value in
+                    // We should use the existing rotation + diff the difference
+                    // Currently the sphere jumps back to start point
                     rotation = Float(value.translation.width) * 0.01
                 }
         )
