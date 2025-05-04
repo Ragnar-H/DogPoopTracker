@@ -11,34 +11,25 @@ import RealityKit
 struct ContentView: View {
     let itemSpacing:Float = 0.6
     @State private var dragOffset:CGFloat = 0
+    @StateObject private var stateManager = CarouselStateManager()
 
     var body: some View {
         RealityView { content in
-            for i in 0..<5 {
-                let entity = ModelEntity(mesh: .generateBox(size: [0.4, 0.4, 0.1]), materials: [SimpleMaterial(color: .red, isMetallic: false)])
+            for item in stateManager.items {
+                let material = SimpleMaterial(color: .red, isMetallic: false)
 
-                let targetX = Float(i) * itemSpacing
-                entity.position = [targetX, 0, 0]
-                entity.name = "box-\(i)"
+                let entity = ModelEntity(
+                    mesh: .generateBox(size: 0.4),
+                    materials: [material]
+                )
+
+                entity.position = item.position
+                entity.name = item.id
 
                 content.add(entity)
             }
         } update: { content in
-            let normalizedDragOffset = Float(dragOffset) * 0.003
-            for i in 0..<5 {
-                if let itemEntity = content.entities.first(where: { $0.name == "box-\(i)"}) as? ModelEntity {
-                    let indexOffset = Float(i - 3) + normalizedDragOffset
-                    let targetX = indexOffset * itemSpacing
-                    // Feels kind of fiddly to calculate position in the render(update) call
-                    // would it be better to calculate and update positions in
-                    // ObservableObject state vars. Then use the render (update)
-                    // call to have smooth animations
-                    itemEntity.position = [targetX, 0, 0]
-                }
-
-            }
-
-
+            
         }
         .gesture(
             DragGesture()
@@ -51,4 +42,31 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+}
+
+struct CarouselItemModel: Identifiable {
+    let id: String
+    var position: SIMD3<Float>
+}
+
+class CarouselStateManager: ObservableObject {
+    @Published var currentIndex: Int = 0
+    @Published var items: [CarouselItemModel] = []
+    @Published var dragOffset: Float = 0
+
+    let itemSpacing: Float = 0.8
+
+    init() {
+        setupInitialItems(count: 5)
+    }
+
+    private func setupInitialItems(count: Int) {
+        items = (0..<count).map { index in
+            let targetX:Float = Float(index) * itemSpacing - Float(count) * itemSpacing / 2
+            return CarouselItemModel(
+                id: "item_\(index)",
+                position: [targetX, 0, 0]
+            )
+        }
+    }
 }
