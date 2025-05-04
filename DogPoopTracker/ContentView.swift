@@ -41,6 +41,9 @@ struct ContentView: View {
                 .onChanged { value in
                     stateManager.updateDragOffset(Float(value.translation.width))
                 }
+                .onEnded { value in
+                    stateManager.endDrag(Float(value.translation.width))
+                }
         )
     }
 }
@@ -102,5 +105,15 @@ class CarouselStateManager: ObservableObject {
 
             items[i].position.x = targetX
         }
+    }
+
+    func endDrag(_ offset:Float) {
+        let offsetInItems = offset * dragNormalizer / itemSpacing
+        let targetIndex = currentIndex - Int(round(offsetInItems))
+        let newIndex = max(0, min(items.count - 1, targetIndex))
+
+        currentIndex = newIndex
+
+        updateDragOffset(0.0)
     }
 }
