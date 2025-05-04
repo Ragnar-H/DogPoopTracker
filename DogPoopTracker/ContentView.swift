@@ -14,8 +14,8 @@ struct ContentView: View {
 
     var body: some View {
         RealityView { content in
-            for item in stateManager.items {
-                let material = SimpleMaterial(color: .red, isMetallic: false)
+            for (index, item) in stateManager.items.enumerated() {
+                let material = SimpleMaterial(color: colorByIndex(index), isMetallic: false)
 
                 let entity = ModelEntity(
                     mesh: .generateBox(size: 0.4),
@@ -47,6 +47,23 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+}
+
+func colorByIndex(_ index: Int) -> SimpleMaterial.Color {
+    switch index {
+    case 0:
+        return .red
+    case 1:
+        return .blue
+    case 2:
+        return .orange
+    case 3:
+        return .yellow
+    case 4:
+        return .purple
+    default:
+        return .green
+    }
 }
 
 struct CarouselItemModel: Identifiable {
