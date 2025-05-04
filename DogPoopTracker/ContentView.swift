@@ -72,7 +72,7 @@ struct CarouselItemModel: Identifiable {
 }
 
 class CarouselStateManager: ObservableObject {
-    @Published var currentIndex: Int = 0
+    @Published var currentIndex: Int = 2
     @Published var items: [CarouselItemModel] = []
 
     let itemSpacing: Float = 0.8
@@ -84,7 +84,7 @@ class CarouselStateManager: ObservableObject {
 
     private func setupInitialItems(count: Int) {
         items = (0..<count).map { index in
-            let targetX:Float = Float(index) * itemSpacing
+            let targetX:Float = Float(index - currentIndex) * itemSpacing
             return CarouselItemModel(
                 id: "item_\(index)",
                 position: [targetX, 0, 0]
