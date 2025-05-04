@@ -117,8 +117,9 @@ class CarouselStateManager: ObservableObject {
         let dragOffset = offset * dragNormalizer
 
         for i in 0..<items.count {
+            let dampSelectedItem:Float = i == currentIndex ? 0.65 : 1.0
             let indexOffset = Float(i - currentIndex) + dragOffset / itemSpacing
-            let targetX = indexOffset * itemSpacing
+            let targetX = indexOffset * itemSpacing * dampSelectedItem
 
             items[i].position.x = targetX
         }
