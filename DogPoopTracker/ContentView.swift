@@ -59,6 +59,7 @@ class CarouselStateManager: ObservableObject {
     @Published var items: [CarouselItemModel] = []
 
     let itemSpacing: Float = 0.8
+    let dragNormalizer: Float = 0.003
 
     init() {
         setupInitialItems(count: 5)
@@ -75,7 +76,7 @@ class CarouselStateManager: ObservableObject {
     }
 
     func updateDragOffset(_ offset: Float) {
-        let dragOffset = offset * 0.003
+        let dragOffset = offset * dragNormalizer
         let centerX: Float = 0
 
         for i in 0..<items.count {
