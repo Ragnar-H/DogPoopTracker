@@ -66,7 +66,7 @@ class CarouselStateManager: ObservableObject {
 
     private func setupInitialItems(count: Int) {
         items = (0..<count).map { index in
-            let targetX:Float = Float(index) * itemSpacing - Float(count) * itemSpacing / 2
+            let targetX:Float = Float(index) * itemSpacing
             return CarouselItemModel(
                 id: "item_\(index)",
                 position: [targetX, 0, 0]
