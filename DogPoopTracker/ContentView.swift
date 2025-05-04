@@ -10,7 +10,6 @@ import RealityKit
 
 struct ContentView: View {
     let itemSpacing:Float = 0.6
-    @State private var dragOffset:CGFloat = 0
     @StateObject private var stateManager = CarouselStateManager()
 
     var body: some View {
@@ -29,12 +28,18 @@ struct ContentView: View {
                 content.add(entity)
             }
         } update: { content in
-            
+            for item in stateManager.items {
+                // I wonder if we can store the entities directly
+                // in stateManager and update the positions there
+                if let entity = content.entities.first(where: { $0.name == item.id}) as? ModelEntity {
+                    entity.position = item.position
+                }
+            }
         }
         .gesture(
             DragGesture()
                 .onChanged { value in
-                    dragOffset = value.translation.width
+                    stateManager.updateDragOffset(Float(value.translation.width))
                 }
         )
     }
@@ -52,7 +57,6 @@ struct CarouselItemModel: Identifiable {
 class CarouselStateManager: ObservableObject {
     @Published var currentIndex: Int = 0
     @Published var items: [CarouselItemModel] = []
-    @Published var dragOffset: Float = 0
 
     let itemSpacing: Float = 0.8
 
@@ -67,6 +71,18 @@ class CarouselStateManager: ObservableObject {
                 id: "item_\(index)",
                 position: [targetX, 0, 0]
             )
+        }
+    }
+
+    func updateDragOffset(_ offset: Float) {
+        let dragOffset = offset * 0.003
+        let centerX: Float = 0
+
+        for i in 0..<items.count {
+            let indexOffset = Float(i - currentIndex) + dragOffset / itemSpacing
+            let targetX = centerX + indexOffset * itemSpacing
+
+            items[i].position.x = targetX
         }
     }
 }
