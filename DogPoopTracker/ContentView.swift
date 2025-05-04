@@ -96,15 +96,7 @@ class CarouselStateManager: ObservableObject {
     }
 
     func updateDragOffset(_ offset: Float) {
-        let dragOffset = offset * dragNormalizer
-        let centerX: Float = 0
-
-        for i in 0..<items.count {
-            let indexOffset = Float(i - currentIndex) + dragOffset / itemSpacing
-            let targetX = centerX + indexOffset * itemSpacing
-
-            items[i].position.x = targetX
-        }
+        updatePositions(offset)
     }
 
     func endDrag(_ offset:Float) {
@@ -113,7 +105,18 @@ class CarouselStateManager: ObservableObject {
         let newIndex = max(0, min(items.count - 1, targetIndex))
 
         currentIndex = newIndex
+        
+        updatePositions()
+    }
 
-        updateDragOffset(0.0)
+    private func updatePositions(_ offset: Float = 0.0) {
+        let dragOffset = offset * dragNormalizer
+
+        for i in 0..<items.count {
+            let indexOffset = Float(i - currentIndex) + dragOffset / itemSpacing
+            let targetX = indexOffset * itemSpacing
+
+            items[i].position.x = targetX
+        }
     }
 }
