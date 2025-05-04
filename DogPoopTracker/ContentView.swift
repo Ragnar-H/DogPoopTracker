@@ -105,7 +105,8 @@ class CarouselStateManager: ObservableObject {
         let newIndex = max(0, min(items.count - 1, targetIndex))
 
         currentIndex = newIndex
-        
+
+        // We can animate here or we can do animation transitions in the update call for RealityView
         updatePositions()
     }
 
