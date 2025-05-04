@@ -32,7 +32,11 @@ struct ContentView: View {
                 // I wonder if we can store the entities directly
                 // in stateManager and update the positions there
                 if let entity = content.entities.first(where: { $0.name == item.id}) as? ModelEntity {
-                    entity.position = item.position
+                    // The drawback is that all moves are now animated
+                    // and they are animated at the same rate
+                    // We don't have the option to make snap-to moves snappier for example
+                    let moveAnimation = Transform(translation: item.position)
+                    entity.move(to: moveAnimation, relativeTo: nil, duration: 0.2, timingFunction: .easeInOut)
                 }
             }
         }
@@ -106,7 +110,6 @@ class CarouselStateManager: ObservableObject {
 
         currentIndex = newIndex
 
-        // We can animate here or we can do animation transitions in the update call for RealityView
         updatePositions()
     }
 
